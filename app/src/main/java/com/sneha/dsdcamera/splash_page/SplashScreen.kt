@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,11 +35,11 @@ import com.sneha.dsdcamera.ErrorDialog
 import com.sneha.dsdcamera.LogUtils.logError
 import com.sneha.dsdcamera.ProgressDialogCompose
 import com.sneha.dsdcamera.R
-import com.sneha.dsdcamera.camera_page.CameraEvents
 import com.sneha.dsdcamera.camera_page.CameraStates
 import com.sneha.dsdcamera.camera_page.DialogCompose
 import com.sneha.dsdcamera.camera_page.VerticalSpacer
-import com.sneha.dsdcamera.utils.processImage
+import com.sneha.dsdcamera.utils.ImageProcessor1
+import com.sneha.dsdcamera.utils.ImageProcessor2
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -63,7 +62,8 @@ fun SplashScreen(
     var process: CameraStates.Process by remember { mutableStateOf(CameraStates.Process.IDLE) }
     if (showFilePicker) {
         PhotosPickerCompose(onMediaPicked = {
-            processImage(it, context).onEach { imageProcess ->
+            val imageProcessor = ImageProcessor2()
+            imageProcessor.processImage(it, context).onEach { imageProcess ->
                 process = imageProcess
             }.launchIn(scope)
         }, onDismiss = { showFilePicker = false }, onError = { error = it })

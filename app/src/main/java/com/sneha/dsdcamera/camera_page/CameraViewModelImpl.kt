@@ -21,7 +21,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sneha.dsdcamera.LogUtils.logDebug
 import com.sneha.dsdcamera.LogUtils.logError
-import com.sneha.dsdcamera.utils.processImage
+import com.sneha.dsdcamera.utils.ImageProcessor
+import com.sneha.dsdcamera.utils.ImageProcessor1
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -39,6 +40,7 @@ private const val DOWN_SYNDROME = "This person has DownSyndrome"
 private const val returnDummy: Boolean = false
 
 class CameraViewModelImpl : ViewModel(), CameraViewModel {
+    private val imageProcessor = ImageProcessor1()
 
 
     private var currentCameraState: CameraStates.CurrentCamera by mutableStateOf(
@@ -101,7 +103,7 @@ class CameraViewModelImpl : ViewModel(), CameraViewModel {
                 // This updates the UI
                 val processFlow: Flow<CameraStates.Process> =
                     if (returnDummy) releaseDummyResult(it)
-                    else processImage(it, previewView.context)
+                    else imageProcessor.processImage(it, previewView.context)
                 processFlow.onEach { process -> this@CameraViewModelImpl.process = process }.launchIn(viewModelScope)
             }
         }
